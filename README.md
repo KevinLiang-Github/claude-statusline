@@ -1,71 +1,66 @@
-# claude-statusline README
+# Claude Statusline
 
-This is the README for your extension "claude-statusline". After writing up a brief description, we recommend including the following sections.
+A lightweight Visual Studio Code extension that monitors your active Claude Code CLI token consumption and displays real-time session metrics directly in the status bar. It dynamically integrates with local `caveman` status line hooks to clean, parse, and display your session context seamlessly.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+* **Real-time Token Tracking:** Automatically watches active `.jsonl` session transcript logs and calculates total tokens used against model limits (200k or 1M budgets).
+* **Color-Coded Threshold Warnings:** Dynamic status bar recoloring based on context consumption (Green for safe, Yellow at 60% capacity, and Red at 85% or higher) to help prevent unexpected context-window exhaustion.
+* **Caveman Badge Integration:** Automatically checks for, invokes, and sanitizes output from local `caveman-statusline.ps1` hooks, cleanly extracting core environment blocks while dropping trailing Git glyph or terminal escape sequence bugs.
+* **Zero-Configuration Portability:** Uses dynamic path scanners to resolve platform home directories, user environments, and randomized plugin cache hashes automatically on fresh installations.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+* **Node.js** (v18.0.0 or higher recommended)
+* **npm** (v9.0.0 or higher)
+* **Claude Code CLI** (installed and configured locally)
+* **PowerShell** (for Windows users utilizing caveman hook badge execution)
 
-## Extension Settings
+## Installation
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+Grab `claude-statusline-0.0.1.vsix` from release and install from you VSCode.
 
-For example:
+## Building from Source
 
-This extension contributes the following settings:
+If you want to modify the source code or install this extension manually on a clean machine, follow these instructions to compile and build the package from source code:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+### 1. Install Project Dependencies
+Open your terminal in the root folder of this project and run the following command to download the compiler, build tools, and extension development types:
+```bash
+npm install
+```
 
-## Known Issues
+### 2. Handle Test Runner Types (If Compiling for the First Time)
+If you run into compilation errors regarding missing Mocha testing frameworks (`suite` or `test` names not found), ensure the test definitions are explicitly loaded in your local development environment:
+```bash
+npm install --save-dev @types/mocha
+```
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+### 3. Package the Extension into a VSIX File
+To assemble your TypeScript source code and package it into a single portable production bundle, use the preconfigured bundle script:
+```bash
+npm run vsce-bundle
+```
+
+Note: This script calls Webpack under production optimizations, flags hidden source-mapping parameters, and compiles your bundle using the `--allow-missing-repository` configuration bypass.
+
+Upon completion, a file named `claude-statusline-0.0.1.vsix` will be created in the root directory.
+
+### 4. Install into Visual Studio Code
+You can install this artifact straight into your active editor using either option below:
+
+* Via Terminal: Run the installation argument against your system's VS Code executable:
+```bash
+  code --install-extension claude-statusline-0.0.1.vsix
+```
+
+* Via Editor GUI: Open VS Code, navigate to the Extensions Marketplace View (Ctrl+Shift+X), click the ... icon at the top right of the side panel header, select Install from VSIX..., and browse to select your newly created file.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+* Initial release.
+* Added dynamic `.jsonl` transcript token tracking.
+* Automated folder crawling logic to handle randomized Claude plugin hashes.
+* Sanitized terminal ANSI styling blocks and isolated core `[CAVEMAN]` badge tracking.
